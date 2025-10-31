@@ -1,0 +1,22 @@
+{
+  "name": "rpc-client-tcb",
+  "version": "1.1.0",
+  "description": "An elegant RPC client for miniprogram cloud functions. 为小程序云开发设计的、体验极致的 RPC 小程序调用端。",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "miniprogram",
+    "tcb",
+    "rpc",
+    "client",
+    "cloud-function",
+    "小程序",
+    "云开发",
+    "腾讯云",
+    "远程调用"
+  ],
+  "author": "liwh <1010493573@qq.com>",
+  "license": "MIT"
+}

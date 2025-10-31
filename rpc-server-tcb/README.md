@@ -5,7 +5,7 @@
 
 一个为**小程序云开发**设计的、**零配置**、约定优于配置的 RPC 服务端框架。它可以让你将云函数内的业务逻辑按模块组织，并提供优雅的上下文注入机制。
 
-与 [rpc-client-tcb](https://www.npmjs.com/package/rpc-client-tcb) (即将推出) 配合使用，可以获得从云端到小程序端的极致开发体验。
+与 [rpc-client-tcb](https://www.npmjs.com/package/rpc-client-tcb)配合使用，可以获得从云端到小程序端的极致开发体验。
 
 ## ✨ 特性
 

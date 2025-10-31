@@ -6,7 +6,7 @@
  * @param {string} options.functionName - 统一的云函数入口名称，例如 'rpcEntry'。
  * @returns {Proxy} 一个 RPC 客户端代理对象，你可以通过它直接调用云函数中的模块和方法。
  */
-function createRpcClient(options) {
+export function createRpcClient(options) {
   if (!options || !options.functionName) {
     throw new Error('[rpc-client-tcb] `options.functionName` is required.');
   }
@@ -19,7 +19,7 @@ function createRpcClient(options) {
       if (moduleName === 'then') {
         return undefined;
       }
-      
+
       // 返回第二个 "方法" 代理
       // 当访问 rpc.user.getInfo 时, `actionName` 就是 'getInfo'
       return new Proxy({}, {
@@ -62,7 +62,3 @@ function createRpcClient(options) {
     },
   });
 }
-
-module.exports = {
-  createRpcClient,
-};
