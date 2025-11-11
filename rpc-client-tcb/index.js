@@ -3,7 +3,7 @@
  *
  * @public
  * @param {object} options - 配置项。
- * @param {string} options.functionName - 统一的云函数入口名称，例如 'rpcEntry'。
+ * @param {string} options.functionName - 统一的云函数入口名称，例如 'rpc'。
  * @returns {Proxy} 一个 RPC 客户端代理对象，你可以通过它直接调用云函数中的模块和方法。
  */
 export function createRpcClient(options) {
@@ -11,51 +11,47 @@ export function createRpcClient(options) {
     throw new Error('[rpc-client-tcb] `options.functionName` is required.');
   }
 
-  // 使用 Proxy 创建一个 “模块” 代理
-  // 当访问 rpc.user 时, `moduleName` 就是 'user'
+  // 第一层 Proxy：捕获模块名 (e.g., rpc.user)
   return new Proxy({}, {
     get(target, moduleName) {
-      // 避免某些库（如 antd）将 rpc 对象误判为 Promise 而尝试访问 .then
       if (moduleName === 'then') {
         return undefined;
       }
-
-      // 返回第二个 "方法" 代理
-      // 当访问 rpc.user.getInfo 时, `actionName` 就是 'getInfo'
+      // 第二层 Proxy：捕获方法名 (e.g., rpc.user.getInfo)
       return new Proxy({}, {
         get(target, actionName) {
-          // 最终返回一个可执行的异步函数
-          return (...params) => {
-            // 这个函数体将在用户实际调用时执行, e.g., rpc.user.getInfo('123')
-            return new Promise((resolve, reject) => {
-              wx.cloud.callFunction({
+          // 返回一个 async 函数，直接使用 await 来处理 Promise
+          return async (...params) => {
+            try {
+              // 1. 直接 await 调用，因为 wx.cloud.callFunction 在不传回调时返回 Promise
+              const res = await wx.cloud.callFunction({
                 name: options.functionName,
                 data: {
-                  rpcModule: moduleName.toString(), // 确保是字符串
+                  rpcModule: moduleName.toString(),
                   rpcAction: actionName.toString(),
                   rpcParams: params,
                 },
-                success: (res) => {
-                  if (res.result && res.result.success) {
-                    // 云函数执行成功，返回业务数据
-                    resolve(res.result.data);
-                  } else if (res.result && res.result.error) {
-                    // 云函数执行成功，但返回了业务错误
-                    // 包装成一个真正的 Error 对象，以便于调试
-                    const error = new Error(res.result.error.message);
-                    error.code = res.result.error.code;
-                    reject(error);
-                  } else {
-                    // 未知或不规范的返回格式
-                    reject(new Error('Unknown server response format.'));
-                  }
-                },
-                fail: (err) => {
-                  // 网络错误或云函数调用失败
-                  reject(err);
-                },
               });
-            });
+
+              // 2. 在 try 块中处理成功或业务失败的逻辑
+              if (res.result && res.result.success) {
+                // 业务成功，直接 return 数据 (相当于 resolve)
+                return res.result.data;
+              } else if (res.result && res.result.error) {
+                // 业务失败，构造并 throw 错误 (相当于 reject)
+                const error = new Error(res.result.error.message);
+                error.code = res.result.error.code;
+                throw error;
+              } else {
+                // 未知格式，同样抛出错误
+                throw new Error('Unknown server response format.');
+              }
+            } catch (err) {
+              // 3. 在 catch 块中捕获所有类型的错误
+              // 包括：wx.cloud.callFunction 的调用失败（网络等）和我们在上面手动 throw 的业务错误
+              // 然后重新抛出，让外层的 .catch() 或 try...catch 能够捕获到
+              throw err;
+            }
           };
         },
       });
