@@ -127,7 +127,7 @@ const rpc = createRpcClient({
 | 环境 | 服务端包 |
 | :--- | :--- |
 | **腾讯云云函数 (SCF)** | [rpc-server-scf](https://www.npmjs.com/package/rpc-server-scf) |
-| **Node.js (Express/Koa)** | `rpc-server-node` (规划中) |
+| **Node.js (Express/Koa)** | [rpc-server-node](https://www.npmjs.com/package/rpc-server-node) |
 
 ## 📄 开源协议
 

@@ -1,6 +1,6 @@
 {
   "name": "rpc-client-fetch",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A universal, zero-dependency RPC client based on Fetch API. 基于 Fetch API 的通用 RPC 客户端，适用于 Web、Node.js 和 React Native。",
   "type": "module",
   "main": "index.js",
