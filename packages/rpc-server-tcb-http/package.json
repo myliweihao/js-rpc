@@ -1,0 +1,30 @@
+{
+  "name": "rpc-server-tcb-http",
+  "version": "1.0.0",
+  "description": "RPC server framework for WeChat Cloud Base HTTP Triggers (云函数 URL 化). 小程序云开发 HTTP 触发器专用 RPC 服务端。",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "miniprogram",
+    "tcb",
+    "rpc",
+    "http",
+    "url化",
+    "fetch",
+    "小程序",
+    "云开发",
+    "js-rpc"
+  ],
+  "author": "liwh <1010493573@qq.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/myliweihao/js-rpc.git"
+  },
+  "homepage": "https://github.com/myliweihao/js-rpc",
+  "bugs": {
+    "url": "https://github.com/myliweihao/js-rpc/issues"
+  }
+}
